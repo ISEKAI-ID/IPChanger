@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/04/01 09:32:16.000.131,=Y:\Delphi 10.4 Project\Unit2.pas</Transaction>
+    <Transaction>2024/04/01 09:34:16.000.292,Y:\Delphi 10.4 Project\Unit2.dfm=Y:\Delphi 10.4 Project\IPChanger\Unit2.dfm</Transaction>
+    <Transaction>2024/04/01 09:34:16.000.292,Y:\Delphi 10.4 Project\Unit2.pas=Y:\Delphi 10.4 Project\IPChanger\Unit2.pas</Transaction>
+    <Transaction>2024/04/01 09:34:22.000.042,Y:\Delphi 10.4 Project\Project1.dproj=Y:\Delphi 10.4 Project\IPChanger\IPChanger.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

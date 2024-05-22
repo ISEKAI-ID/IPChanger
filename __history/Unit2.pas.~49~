@@ -1,0 +1,241 @@
+unit Unit2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls, IniFiles, ShellAPI;
+
+type
+  TForm2 = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    BTNSetIPv4Ethernet: TButton;
+    BTNSetDNSEthernet: TButton;
+    BTNResetIPv4: TButton;
+    BTNResetDNS: TButton;
+    GroupBox2: TGroupBox;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    TextIPv4Name: TEdit;
+    TextIPv4Address: TEdit;
+    TextIPv4Mask: TEdit;
+    BTNSaveIPv4: TButton;
+    TextIPv4Gateway: TEdit;
+    Label6: TLabel;
+    GroupBox3: TGroupBox;
+    Label7: TLabel;
+    Label8: TLabel;
+    TextDNSName: TEdit;
+    Label9: TLabel;
+    TextDNS1: TEdit;
+    TextDNS2: TEdit;
+    BTNSaveDNS: TButton;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    txtLoadIPv4Name: TEdit;
+    txtLoadIPv4Address: TEdit;
+    txtLoadIPv4Mask: TEdit;
+    txtLoadIPv4Gateway: TEdit;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    txtLoadDNSName: TEdit;
+    txtLoadDNS1: TEdit;
+    txtLoadDNS2: TEdit;
+    Panel3: TPanel;
+    BTNOpenIPv4: TButton;
+    BTNOpenDNS: TButton;
+    BTNHelp: TButton;
+    OpenIPv4: TOpenDialog;
+    BTNInterface: TButton;
+    Label1: TLabel;
+    TextDNSInterface: TEdit;
+    txtLoadDNSInterface: TEdit;
+    Label2: TLabel;
+    Label17: TLabel;
+    txtLoadIPv4Interface: TEdit;
+    TextIPv4Interface: TEdit;
+    Label18: TLabel;
+    TaskDialog1: TTaskDialog;
+    BTNSetIPv4WiFi: TButton;
+    BTNSetDNSWiFi: TButton;
+    procedure BTNSaveIPv4Click(Sender: TObject);
+    procedure BTNSaveDNSClick(Sender: TObject);
+    procedure BTNOpenIPv4Click(Sender: TObject);
+    procedure BTNOpenDNSClick(Sender: TObject);
+    procedure BTNSetIPv4EthernetClick(Sender: TObject);
+    procedure BTNInterfaceClick(Sender: TObject);
+    procedure BTNHelpClick(Sender: TObject);
+    procedure BTNSetDNSEthernetClick(Sender: TObject);
+    procedure Panel3Click(Sender: TObject);
+    procedure BTNResetIPv4Click(Sender: TObject);
+    procedure BTNResetDNSClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+{$R *.dfm}
+procedure TForm2.BTNHelpClick(Sender: TObject);
+var
+  Balloon: TTaskDialog;
+begin
+  Balloon := TTaskDialog.Create(Self);
+  Balloon.Caption := 'Aplikasi Ganti IP oleh SIRS';
+  //Balloon.Content := 'This is a message notification!';
+  //Balloon.Icon := LargeImageList.Images[0]; // Set your icon here
+  Balloon.Execute;
+end;
+
+procedure TForm2.BTNInterfaceClick(Sender: TObject);
+begin
+ShellExecute(0, nil, 'cmd.exe', '/K netsh interface ipv4 show config', nil, SW_SHOW);
+end;
+
+procedure TForm2.BTNOpenDNSClick(Sender: TObject);
+var
+  OpenDialog: TOpenDialog;
+  IniFile: TIniFile;
+begin
+  OpenDialog := TOpenDialog.Create(Self);
+  try
+    OpenDialog.Filter := 'Ini Files (*.ini)|*.ini';
+    if OpenDialog.Execute then
+    begin
+      IniFile := TIniFile.Create(OpenDialog.FileName);
+      txtLoadDNSInterface.Text := IniFile.ReadString('DNSCONFIG', 'DNSINTERFACE', '');
+      txtLoadDNSName.Text := IniFile.ReadString('DNSCONFIG', 'DNSNAME', '');
+      txtLoadDNS1.Text := IniFile.ReadString('DNSCONFIG', 'DNS1', '');
+      txtLoadDNS2.Text := IniFile.ReadString('DNSCONFIG', 'DNS2', '');
+    end;
+  finally
+  end;
+end;
+
+procedure TForm2.BTNOpenIPv4Click(Sender: TObject);
+var
+  OpenDialog: TOpenDialog;
+  IniFile: TIniFile;
+begin
+  OpenDialog := TOpenDialog.Create(Self);
+  try
+    OpenDialog.Filter := 'Ini Files (*.ini)|*.ini';
+    if OpenDialog.Execute then
+    begin
+      IniFile := TIniFile.Create(OpenDialog.FileName);
+      txtLoadIPv4Interface.Text := IniFile.ReadString('IPCONFIG', 'IPv4Interface', '');
+      txtLoadIPv4Name.Text := IniFile.ReadString('IPCONFIG', 'IPv4Name', '');
+      txtLoadIPv4Address.Text := IniFile.ReadString('IPCONFIG', 'IPv4Address', '');
+      txtLoadIPv4Mask.Text := IniFile.ReadString('IPCONFIG', 'IPv4Mask', '');
+      txtLoadIPv4Gateway.Text := IniFile.ReadString('IPCONFIG', 'IPv4Gateway', '');
+    end;
+  finally
+  end;
+end;
+
+procedure TForm2.BTNResetDNSClick(Sender: TObject);
+var
+  IPv4Interface: string;
+begin
+  IPv4Interface := txtLoadIPv4Interface.Text;
+  ShellExecute(0, nil, 'cmd.exe', PChar('/C netsh interface ipv4 set dnsservers name="'+IPv4Interface+'" source=dhcp'), nil, SW_SHOWNORMAL);
+
+end;
+
+procedure TForm2.BTNResetIPv4Click(Sender: TObject);
+var
+  IPv4Interface: string;
+begin
+  IPv4Interface := txtLoadIPv4Interface.Text;
+  ShellExecute(0, nil, 'cmd.exe', PChar('/C netsh interface ipv4 set address name="'+IPv4Interface+'" source=dhcp'), nil, SW_SHOWNORMAL);
+end;
+
+procedure TForm2.BTNSaveDNSClick(Sender: TObject);
+var
+Ini: TIniFile;
+begin
+Ini := TIniFile.Create('./DNSConfig-'+TextDNSName.Text+'.ini');
+try
+  Ini.WriteString('DNSCONFIG', 'DNSINTERFACE', TextDNSInterface.Text);
+  Ini.WriteString('DNSCONFIG', 'DNSNAME', TextDNSName.Text);
+  Ini.WriteString('DNSCONFIG', 'DNS1', TextDNS1.Text);
+  Ini.WriteString('DNSCONFIG', 'DNS2', TextDNS2.Text);
+finally
+  Ini.Free;
+end;
+end;
+
+procedure TForm2.BTNSaveIPv4Click(Sender: TObject);
+var
+Ini: TIniFile;
+begin
+Ini := TIniFile.Create('./IPv4Config-'+TextIPv4Name.Text+'.ini');
+try
+  Ini.WriteString('IPCONFIG', 'IPv4Interface', TextIPv4Interface.Text);
+  Ini.WriteString('IPCONFIG', 'IPv4Name', TextIPv4Name.Text);
+  Ini.WriteString('IPCONFIG', 'IPv4Address', TextIPv4Address.Text);
+  Ini.WriteString('IPCONFIG', 'IPv4Mask', TextIPv4Mask.Text);
+  Ini.WriteString('IPCONFIG', 'IPv4Gateway', TextIPv4Gateway.Text);
+finally
+  Ini.Free;
+end;
+end;
+
+procedure TForm2.BTNSetDNSEthernetClick(Sender: TObject);
+var
+  DNSInterface: string;
+  // Predefined IP configuration (replace with desired values)
+  DNS1, DNS2: string;
+begin
+  DNSInterface := txtLoadDNSInterface.Text;
+
+  // Input validation (optional but recommended)
+  // Check if IPv4Interface is a valid network interface name
+
+  DNS1 := txtLoadDNS1.Text;
+  DNS2 := txtLoadDNS2.Text;
+  // Build the command with string formatting for readability
+  ShellExecute(0, nil, 'cmd.exe', PChar('/K netsh interface ipv4 set set dnsservers name="Ethernet" source=static address=' + DNS1 +','+DNS2), nil, SW_SHOW);
+  //sleep(100);
+  //ShellExecute(0, nil, 'cmd.exe', PChar('/K netsh interface ipv4 set dns name="Ethernet" static ' + DNS2 + ' index=2'), nil, SW_SHOW);
+  //ShellExecute(0, nil, 'cmd.exe', PChar('/C ping ' + DNS1 + ' -t'), nil, SW_SHOWNORMAL);
+end;
+
+procedure TForm2.BTNSetIPv4EthernetClick(Sender: TObject);
+var
+  IPv4Interface: string;
+  // Predefined IP configuration (replace with desired values)
+  IPv4Address, IPv4Mask, IPv4Gateway: string;
+begin
+  IPv4Interface := txtLoadIPv4Interface.Text;
+
+  // Input validation (optional but recommended)
+  // Check if IPv4Interface is a valid network interface name
+
+  IPv4Address := txtLoadIPv4Address.Text;
+  IPv4Mask := txtLoadIPv4Mask.Text;
+  IPv4Gateway := txtLoadIPv4Gateway.Text;
+
+  // Build the command with string formatting for readability
+  ShellExecute(0, nil, 'cmd.exe', PChar('/C netsh interface ipv4 set address name="'+IPv4Interface+'" static address=' + IPv4Address + ' mask=' + IPv4Mask + ' gateway=' + IPv4Gateway), nil, SW_SHOWNORMAL);
+end;
+
+procedure TForm2.Panel3Click(Sender: TObject);
+begin
+BTNSetIPv4WiFi.Hide;
+BTNSetDNSWiFi.Hide;
+end;
+
+end.
