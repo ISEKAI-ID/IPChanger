@@ -1,2 +1,2 @@
 # IPChanger
-IPChanger built using Delphi 11
+IPChanger built using Delphi 11 RAD STUDIO COMMUNITY EDITION
